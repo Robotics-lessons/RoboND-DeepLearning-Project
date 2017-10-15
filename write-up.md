@@ -145,6 +145,9 @@ $ python follower.py my_amazing_model.h5
 ## Model Architecture ##
 Using fully convolutional network (FCN) to build this model architecture. It uses 6 encoder_block layers and the 1x1 convolution layer, plus 6 decoder_block layers.
 
+[image_1]: ./docs/misc/FCNArchitecture.png
+![alt text][FCN Architecture]
+
 ### Separable Convolutions
 
 The Encoder for FCN will essentially require separable convolution layers. The 1x1 convolution layer in the FCN, however, is a regular convolution. Implementations for both are provided below for using. Each includes batch normalization with the ReLU activation function applied to the layers.
@@ -302,9 +305,18 @@ Define and tune the hyperparameters.
 
     batch_size: number of training samples/images that get propagated through the network in a single pass.
     num_epochs: number of times the entire training dataset gets propagated through the network.
-    steps_per_epoch: number of batches of training images that go through the network in 1 epoch. We have provided you with a default value. One recommended value to try would be based on the total number of images in training dataset divided by the batch_size.
-    validation_steps: number of batches of validation images that go through the network in 1 epoch. This is similar to steps_per_epoch, except validation_steps is for the validation dataset. We have provided you with a default value for this as well.
+    steps_per_epoch: number of batches of training images that go through the network in 1 epoch. 
+      One recommended value to try would be based on the total number of images in training dataset divided by the batch_size.
+    validation_steps: number of batches of validation images that go through the network in 1 epoch. 
+      This is similar to steps_per_epoch, except validation_steps is for the validation dataset.     
     workers: maximum number of processes to spin up. This can affect the training speed and is dependent on the hardware.
 
+    learning_rate = 0.0002
+    batch_size = 32
+    num_epochs = 40
+    steps_per_epoch = 200
+    validation_steps = 50
+    workers = 2
+  
 
 
