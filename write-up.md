@@ -216,7 +216,7 @@ def decoder_block(small_ip_layer, large_ip_layer, filters):
     return output_layer
 ```
 
-## Model
+### Model Function
 
 There are three steps to build a FCN architecture:
 
@@ -224,5 +224,87 @@ There are three steps to build a FCN architecture:
    2. Add a 1x1 Convolution layer using the conv2d_batchnorm() function. Remember that 1x1 Convolutions require a kernel and stride of 1.
    3. Add decoder blocks for the decoder layers.
    
+```
+def fcn_model(inputs, num_classes, filters=32):
+    print('inputs : ',inputs)     
+    #TODO Add Encoder Blocks. 
+    #Remember that with each encoder layer, the depth of your model (the number of filters) increases.
+    input_layer1 = encoder_block(inputs, filters, 2)
+    input_layer2 = encoder_block(input_layer1, filters*2, 2)  
+    input_layer3 = encoder_block(input_layer2, filters*4, 2) 
+    input_layer4 = encoder_block(input_layer3, filters*8, 2) 
+    input_layer5 = encoder_block(input_layer4, filters*16, 2) 
+    input_layer6 = encoder_block(input_layer5, filters*32, 2) 
+
+    print('input_layer 1 :',input_layer1)
+    print('input_layer 2 :',input_layer2)
+    print('input_layer 3 :',input_layer3)
+    print('input_layer 4 :',input_layer4) 
+    print('input_layer 5 :',input_layer5)
+    print('input_layer 6 :',input_layer6)
+    
+    #TODO Add 1x1 Convolution layer using conv2d_batchnorm().
+    small_ip_layer = conv2d_batchnorm(input_layer6, filters*64, kernel_size=1, strides=1)
+    print('small_ip_layer :',small_ip_layer) 
+    
+    #TODO: Add the same number of Decoder Blocks as the number of Encoder Blocks
+    output_layer6 = decoder_block(small_ip_layer, input_layer5, filters*32) 
+    print('output_layer 6: ', output_layer6) 
+    output_layer5 = decoder_block(output_layer6, input_layer4, filters*16) 
+    print('output_layer 5: ', output_layer5) 
+    output_layer4 = decoder_block(output_layer5, input_layer3, filters*8)  
+    print('output_layer 4: ', output_layer4) 
+    output_layer3 = decoder_block(output_layer4, input_layer2, filters*4)  
+    print('output_layer 3: ', output_layer3) 
+    output_layer2 = decoder_block(output_layer3, input_layer1, filters*2) 
+    print('output_layer 2: ', output_layer2) 
+    output_layer1 = decoder_block(output_layer2, None, 3) 
+    print('output_layer 1: ', output_layer1) 
+    
+    #The function returns the output layer of your model. "x" is the final layer obtained from the last decoder_block()
+    return layers.Conv2D(num_classes, 1, activation='softmax', padding='same')(output_layer1)
+```
+
+## Training
+
+The following cells will use the FCN you created and define an ouput layer based on the size of the processed image and the number of classes recognized. The hyperparameters will be defined to compile and train the model.
+
+```
+image_hw = 256
+image_shape = (image_hw, image_hw, 3)
+inputs = layers.Input(image_shape)
+num_classes = 3
+
+#Call fcn_model()
+output_layer = fcn_model(inputs, num_classes)
+```
+
+#### List shape for each layer in the model:
+```
+inputs :  Tensor("input_13:0", shape=(?, 256, 256, 3), dtype=float32)
+input_layer 1 : Tensor("batch_normalization_111/batchnorm/add_1:0", shape=(?, 128, 128, 32), dtype=float32)
+input_layer 2 : Tensor("batch_normalization_112/batchnorm/add_1:0", shape=(?, 64, 64, 64), dtype=float32)
+input_layer 3 : Tensor("batch_normalization_113/batchnorm/add_1:0", shape=(?, 32, 32, 128), dtype=float32)
+input_layer 4 : Tensor("batch_normalization_114/batchnorm/add_1:0", shape=(?, 16, 16, 256), dtype=float32)
+input_layer 5 : Tensor("batch_normalization_115/batchnorm/add_1:0", shape=(?, 8, 8, 512), dtype=float32)
+input_layer 6 : Tensor("batch_normalization_116/batchnorm/add_1:0", shape=(?, 4, 4, 1024), dtype=float32)
+small_ip_layer : Tensor("batch_normalization_117/batchnorm/add_1:0", shape=(?, 4, 4, 2048), dtype=float32)
+output_layer 6:  Tensor("batch_normalization_118/batchnorm/add_1:0", shape=(?, 8, 8, 1024), dtype=float32)
+output_layer 5:  Tensor("batch_normalization_119/batchnorm/add_1:0", shape=(?, 16, 16, 512), dtype=float32)
+output_layer 4:  Tensor("batch_normalization_120/batchnorm/add_1:0", shape=(?, 32, 32, 256), dtype=float32)
+output_layer 3:  Tensor("batch_normalization_121/batchnorm/add_1:0", shape=(?, 64, 64, 128), dtype=float32)
+output_layer 2:  Tensor("batch_normalization_122/batchnorm/add_1:0", shape=(?, 128, 128, 64), dtype=float32)
+output_layer 1:  Tensor("batch_normalization_123/batchnorm/add_1:0", shape=(?, 256, 256, 3), dtype=float32)
+```
+### Hyperparameters
+
+Define and tune the hyperparameters.
+
+    batch_size: number of training samples/images that get propagated through the network in a single pass.
+    num_epochs: number of times the entire training dataset gets propagated through the network.
+    steps_per_epoch: number of batches of training images that go through the network in 1 epoch. We have provided you with a default value. One recommended value to try would be based on the total number of images in training dataset divided by the batch_size.
+    validation_steps: number of batches of validation images that go through the network in 1 epoch. This is similar to steps_per_epoch, except validation_steps is for the validation dataset. We have provided you with a default value for this as well.
+    workers: maximum number of processes to spin up. This can affect the training speed and is dependent on the hardware.
+
 
 
