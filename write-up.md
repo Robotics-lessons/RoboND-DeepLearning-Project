@@ -142,3 +142,87 @@ Share your scores in slack, and keep a tally in a pinned message. Scores should 
 $ python follower.py my_amazing_model.h5
 ```
 
+## Model Architecture ##
+Using fully convolutional network (FCN) to build this model architecture. It uses 6 encoder_block layers and the 1x1 convolution layer, plus 6 decoder_block layers.
+
+### Separable Convolutions
+
+The Encoder for FCN will essentially require separable convolution layers. The 1x1 convolution layer in the FCN, however, is a regular convolution. Implementations for both are provided below for using. Each includes batch normalization with the ReLU activation function applied to the layers.
+
+```
+def separable_conv2d_batchnorm(input_layer, filters, strides=1):
+    output_layer = SeparableConv2DKeras(filters=filters,kernel_size=3, strides=strides,
+                             padding='same', activation='relu')(input_layer)
+    
+    output_layer = layers.BatchNormalization()(output_layer) 
+    return output_layer
+
+def conv2d_batchnorm(input_layer, filters, kernel_size=3, strides=1):
+    output_layer = layers.Conv2D(filters=filters, kernel_size=kernel_size, strides=strides, 
+                      padding='same', activation='relu')(input_layer)
+    
+    output_layer = layers.BatchNormalization()(output_layer) 
+    return output_layer
+```
+
+### Bilinear Upsampling
+
+The following helper function implements the bilinear upsampling layer. Upsampling by a factor of 2 is generally recommended. Upsampling is used in the decoder block of the FCN.
+```
+def bilinear_upsample(input_layer):
+        output_layer = BilinearUpSampling2D((2,2))(input_layer)
+    return output_layer
+```
+
+## Build the Model
+
+   Build the FCN consisting of encoder block(s), a 1x1 convolution, and decoder block(s). This step requires experimentation with different numbers of layers and filter sizes to build your model.
+   
+### Encoder Block
+
+Create an encoder block that includes a separable convolution layer using the separable_conv2d_batchnorm() function. The filters parameter defines the size or depth of the output layer. For example, 32 or 64.
+
+```
+def encoder_block(input_layer, filters, strides):
+    
+    # TODO Create a separable convolution layer using the separable_conv2d_batchnorm() function.
+    output_layer = separable_conv2d_batchnorm(input_layer, filters, strides=strides)    
+    return output_layer
+```
+
+### Decoder Block
+
+The decoder block is comprised of three parts:
+
+   A bilinear upsampling layer using the upsample_bilinear() function. The current recommended factor for upsampling is set to 2.
+   A layer concatenation step. This step is similar to skip connections. The data will be concatenated by the upsampled small_ip_layer and the large_ip_layer.
+    Some (one or two) additional separable convolution layers to extract some more spatial information from prior layers.
+    If condition statement will check input large_ip_layer value is None or not, if it is None, then skip the concatenating function.
+```
+def decoder_block(small_ip_layer, large_ip_layer, filters):
+    
+    # TODO Upsample the small input layer using the bilinear_upsample() function.
+    upsampled_layer = bilinear_upsample(small_ip_layer)
+
+    # TODO Concatenate the upsampled and large input layers using layers.concatenate
+    if large_ip_layer != None:
+        concatenate_layer = layers.concatenate([upsampled_layer, large_ip_layer])
+    else:
+        concatenate_layer = upsampled_layer
+   
+    # TODO Add some number of separable convolution layers
+    output_layer = separable_conv2d_batchnorm(concatenate_layer, filters)
+ 
+    return output_layer
+```
+
+## Model
+
+There are three steps to build a FCN architecture:
+
+   1. Add encoder blocks to build the encoder layers. 
+   2. Add a 1x1 Convolution layer using the conv2d_batchnorm() function. Remember that 1x1 Convolutions require a kernel and stride of 1.
+   3. Add decoder blocks for the decoder layers.
+   
+
+
