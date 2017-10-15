@@ -4,11 +4,8 @@
 
 In this project, you will train a deep neural network to identify and track a target in simulation. So-called “follow me” applications like this are key to many fields of robotics and the very same techniques you apply here could be extended to scenarios like advanced cruise control in autonomous vehicles or human-robot collaboration in industry.
 
-[image_0]: ./docs/misc/FCNArchitecture.png
+[image_0]: ./docs/misc/sim_screenshot.png 
 ![alt text][image_0] 
-
-[image_1]: ./docs/misc/sim_screenshot.png 
-![alt text][image_1] 
 
 ## Setup Instructions
 **Clone the repository**
@@ -149,7 +146,7 @@ $ python follower.py my_amazing_model.h5
 Using fully convolutional network (FCN) to build this model architecture. It uses 6 encoder_block layers and the 1x1 convolution layer, plus 6 decoder_block layers.
 
 [image_1]: ./docs/misc/FCNArchitecture.png 
-![alt text][FCN Architecture]
+![alt text][image_1]
 
 ### Separable Convolutions
 
