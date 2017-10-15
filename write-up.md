@@ -145,8 +145,7 @@ $ python follower.py my_amazing_model.h5
 ## Model Architecture ##
 Using fully convolutional network (FCN) to build this model architecture. It uses 6 encoder_block layers and the 1x1 convolution layer, plus 6 decoder_block layers.
 
-[image 1]: ./docs/misc/FCNArchitecture.png 
-![alt text][FCN Architecture]
+[image 1]: ./docs/misc/FCNArchitecture.png ![alt text][FCN Architecture]
 
 ### Separable Convolutions
 
