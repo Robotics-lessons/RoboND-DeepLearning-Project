@@ -114,11 +114,19 @@ if __name__ == "__main__":
                     format='%(asctime)s %(levelname)s %(message)s',
                     filename='../logs/training_model_' + datetime.now().strftime('model_%Y-%m-%d-%H-%M-%S') + '.log',
                     filemode='w')
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('-path', '--path', default='../data',
+                        help='The image path to filter')
+
+    args = parser.parse_args()
+    print(args)
+    base_path = args.path
     image_hw =  256
     image_shape = (image_hw, image_hw, 3)
     inputs = layers.Input(image_shape)
     num_classes = 3
-    base_path = '../data'
+
     logging.info('================================================================')
 # Call fcn_model()
     output_layer = fcn_model(inputs, num_classes)
