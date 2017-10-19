@@ -10,7 +10,7 @@ from tensorflow.contrib.keras.python import keras
 from tensorflow.contrib.keras.python.keras import layers, models
 import logging
 from tensorflow import image
-
+import argparse
 from utils import scoring_utils
 from utils.separable_conv2d import SeparableConv2DKeras, BilinearUpSampling2D
 from utils import data_iterator
@@ -151,8 +151,8 @@ if __name__ == "__main__":
     cft.count_type_number(path)
 
     for learning_rate in learning_rates:
-        best_score_num_epoch = 0
-        lowest_loss_num_epoch = 0
+        best_score_num_epoch = num_epochs
+        lowest_loss_num_epoch = num_epochs
         logging.info('================================================================')
         logging.info('learning rate = %f' % learning_rate)
         logging.info('batch_size = %d' % batch_size)
@@ -168,13 +168,13 @@ if __name__ == "__main__":
 
       # Train pics
         train_iter = data_iterator.BatchIteratorSimple(batch_size=batch_size,
-                                                       data_folder=os.path.join('..', 'data', 'train'),
+                                                       data_folder=os.path.join(base_path, 'train'),
                                                        image_shape=image_shape,
                                                        shift_aug=True)
             
         # Validation pics
         val_iter = data_iterator.BatchIteratorSimple(batch_size=batch_size,
-                                                     data_folder=os.path.join('..', 'data', 'validation'),
+                                                     data_folder=os.path.join(base_path, 'validation'),
                                                      image_shape=image_shape)
  
         logging.info('score = %f' % score)
