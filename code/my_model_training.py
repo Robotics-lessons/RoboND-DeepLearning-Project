@@ -16,7 +16,7 @@ from utils.separable_conv2d import SeparableConv2DKeras, BilinearUpSampling2D
 from utils import data_iterator
 from utils import plotting_tools 
 from utils import model_tools
-
+import count_file_type as cft
 
 def separable_conv2d_batchnorm(input_layer, filters, strides=1):
     output_layer = SeparableConv2DKeras(filters=filters,kernel_size=3, strides=strides,
@@ -118,6 +118,7 @@ if __name__ == "__main__":
     image_shape = (image_hw, image_hw, 3)
     inputs = layers.Input(image_shape)
     num_classes = 3
+    base_path = '../data'
     logging.info('================================================================')
 # Call fcn_model()
     output_layer = fcn_model(inputs, num_classes)
@@ -126,18 +127,20 @@ if __name__ == "__main__":
     learning_rates = [0.001, 0.0005, 0.0002]
     batch_size = 32
     num_epochs = 200
-    steps_per_epoch =  len([name for name in os.listdir('../data/train/images')]) // batch_size # 200
-    validation_steps = len([name for name in os.listdir('../data/validation/images')]) // batch_size #50
+    steps_per_epoch =  len([name for name in os.listdir(base_path + '/train/images')]) // batch_size # 200
+    validation_steps = len([name for name in os.listdir(base_path + '/validation/images')]) // batch_size #50
     workers = 2
 
     min_loss_value = 0.01
     logging.info('min_loss_value = %f' % min_loss_value)
-    step_stop_loop_after_best_score = 3
+    step_stop_loop_after_best_score = 4
     logging.info('step_stop_loop_after_best_score = %d' % step_stop_loop_after_best_score)
     step_stop_loop_after_lowest_loss = 5
     logging.info('step_stop_loop_after_lowest_loss = %d' % step_stop_loop_after_lowest_loss)    
-    score = 0.39
+    score = 0.4
     lowest_loss = 10.0
+    path = base_path + '/train/masks'
+    cft.count_type_number(path)
 
     for learning_rate in learning_rates:
         best_score_num_epoch = 0
@@ -169,7 +172,7 @@ if __name__ == "__main__":
         logging.info('score = %f' % score)
         t1 = time.time()
         for i in range(num_epochs):
-        
+            t01 = time.time()       
   
         # Logs
         #    logger_cb = plotting_tools.LoggerPlotter()
@@ -185,7 +188,7 @@ if __name__ == "__main__":
                             workers = workers)
             loss_value = history.history['loss'][0]
             validation_loss = history.history['val_loss'][0]
-            logging.info('epoch number = %d, loss = %f, val_loss = %f' % (i + 1, loss_value, validation_loss))
+            logging.info('[==============================] epoch number = %d, loss = %f, val_loss = %f' % (i + 1, loss_value, validation_loss))
             if loss_value < lowest_loss:
                 lowest_loss = loss_value
                 lowest_loss_num_epoch = i
@@ -229,18 +232,13 @@ if __name__ == "__main__":
 #            im_tuple = plotting_tools.load_images(im_files[i])
 #            plotting_tools.show_images(im_tuple)
 
-                logging.info("Quad behind the target")
+
                 true_pos1, false_pos1, false_neg1, iou1 = scoring_utils.score_run_iou(val_following, pred_following)
-                logging.info("number true positives: %d, number false positives: %d, number false negatives: %d" % (true_pos1, false_pos1, false_neg1))
-                logging.info("average intersection over union for the hero is %f" % iou1) 
-                logging.info("Target not visible")
+
                 true_pos2, false_pos2, false_neg2, iou2 = scoring_utils.score_run_iou(val_no_targ, pred_no_targ)
-                logging.info("number true positives: %d, number false positives: %d, number false negatives: %d" % (true_pos2, false_pos2, false_neg2))
-                logging.info("average intersection over union for the hero is %f" % iou2)         
-                logging.info("Target far away")
+
                 true_pos3, false_pos3, false_neg3, iou3 = scoring_utils.score_run_iou(val_with_targ, pred_with_targ)
-                logging.info("number true positives: %d, number false positives: %d, number false negatives: %d" % (true_pos3, false_pos3, false_neg3))
-                logging.info("average intersection over union for the hero is %f" % iou3)          
+      
         # Sum all the true positives, etc from the three datasets to get a weight for the score
                 true_pos = true_pos1 + true_pos2 + true_pos3
                 false_pos = false_pos1 + false_pos2 + false_pos3
@@ -259,6 +257,15 @@ if __name__ == "__main__":
                 logging.info('Final Grade - {}'.format(final_score))
 
                 if final_score > score:
+                    logging.info("Quad behind the target")
+                    logging.info("number true positives: %d, number false positives: %d, number false negatives: %d" % (true_pos1, false_pos1, false_neg1))
+                    logging.info("average intersection over union for the hero is %f" % iou1) 
+                    logging.info("Target not visible")
+                    logging.info("number true positives: %d, number false positives: %d, number false negatives: %d" % (true_pos2, false_pos2, false_neg2))
+                    logging.info("average intersection over union for the hero is %f" % iou2)         
+                    logging.info("Target far away")
+                    logging.info("number true positives: %d, number false positives: %d, number false negatives: %d" % (true_pos3, false_pos3, false_neg3))
+                    logging.info("average intersection over union for the hero is %f" % iou3)    
             # Save model with best score
                     weight_file_name = str(learning_rate) + '_' + str(final_score) + '_' + datetime.now().strftime('model_%Y-%m-%d-%H-%M-%S') + '.h5'
                     logging.info('Model weight file name = %s' % weight_file_name)
@@ -273,7 +280,8 @@ if __name__ == "__main__":
         logging.info('Best score = {}'.format(score))
         logging.info('Data ---  {}'.format(arr))
         t2 = time.time()
-        logging.info("Time: %0.2fs" % (t2 - t1))
-    
+        logging.info("Time: %0.2fs" % (t2 - t01))
+
+    logging.info("Total Time: %0.2fs" % (t2 - t1)) 
 
 
