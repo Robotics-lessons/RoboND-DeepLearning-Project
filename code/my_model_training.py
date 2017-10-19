@@ -126,23 +126,22 @@ if __name__ == "__main__":
     learning_rates = [0.001, 0.0005, 0.0002]
     batch_size = 32
     num_epochs = 200
-    steps_per_epoch =  len([name for name in os.listdir('../data/train/images')]) // (batch_size*2) # 200
+    steps_per_epoch =  len([name for name in os.listdir('../data/train/images')]) // batch_size # 200
     validation_steps = len([name for name in os.listdir('../data/validation/images')]) // batch_size #50
-    workers = 1
+    workers = 2
 
     min_loss_value = 0.01
     logging.info('min_loss_value = %f' % min_loss_value)
     step_stop_loop_after_best_score = 3
     logging.info('step_stop_loop_after_best_score = %d' % step_stop_loop_after_best_score)
     step_stop_loop_after_lowest_loss = 5
-    logging.info('step_stop_loop_after_lowest_loss = %d' % step_stop_loop_after_lowest_loss)
-    best_score_num_epoch = 0
-    lowest_loss_num_epoch = 0
-
+    logging.info('step_stop_loop_after_lowest_loss = %d' % step_stop_loop_after_lowest_loss)    
+    score = 0.39
+    lowest_loss = 10.0
 
     for learning_rate in learning_rates:
-        lowest_loss = 10.0
-        score = 0.35
+        best_score_num_epoch = 0
+        lowest_loss_num_epoch = 0
         logging.info('================================================================')
         logging.info('learning rate = %f' % learning_rate)
         logging.info('batch_size = %d' % batch_size)
@@ -232,13 +231,16 @@ if __name__ == "__main__":
 
                 logging.info("Quad behind the target")
                 true_pos1, false_pos1, false_neg1, iou1 = scoring_utils.score_run_iou(val_following, pred_following)
-        
+                logging.info("number true positives: %d, number false positives: %d, number false negatives: %d" % (true_pos1, false_pos1, false_neg1))
+                logging.info("average intersection over union for the hero is %f" % iou1) 
                 logging.info("Target not visible")
                 true_pos2, false_pos2, false_neg2, iou2 = scoring_utils.score_run_iou(val_no_targ, pred_no_targ)
-        
+                logging.info("number true positives: %d, number false positives: %d, number false negatives: %d" % (true_pos2, false_pos2, false_neg2))
+                logging.info("average intersection over union for the hero is %f" % iou2)         
                 logging.info("Target far away")
                 true_pos3, false_pos3, false_neg3, iou3 = scoring_utils.score_run_iou(val_with_targ, pred_with_targ)
-        
+                logging.info("number true positives: %d, number false positives: %d, number false negatives: %d" % (true_pos3, false_pos3, false_neg3))
+                logging.info("average intersection over union for the hero is %f" % iou3)          
         # Sum all the true positives, etc from the three datasets to get a weight for the score
                 true_pos = true_pos1 + true_pos2 + true_pos3
                 false_pos = false_pos1 + false_pos2 + false_pos3
@@ -250,11 +252,11 @@ if __name__ == "__main__":
         
         # The IoU for the dataset that never includes the hero is excluded from grading
                 final_IoU = (iou1 + iou3)/2
-                logging.info("IoU no hero - ", final_IoU)
+                logging.info('IoU no hero - {}'.format(final_IoU))
               
         # And the final grade score is 
                 final_score = final_IoU * weight
-                logging.info("Final Grade - ", final_score)
+                logging.info('Final Grade - {}'.format(final_score))
 
                 if final_score > score:
             # Save model with best score
@@ -268,7 +270,7 @@ if __name__ == "__main__":
                     logging.info('Score no long improving at epoch = %d' % i)
                     break
             
-        logging.info('Best score = ', score)
+        logging.info('Best score = {}'.format(score))
         logging.info('Data ---  {}'.format(arr))
         t2 = time.time()
         logging.info("Time: %0.2fs" % (t2 - t1))
