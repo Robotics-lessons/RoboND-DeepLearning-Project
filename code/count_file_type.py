@@ -30,7 +30,7 @@ def contains_hero(filename):
             returnCode = 3 
     return returnCode
 
-def count_type_number(path):
+def count_type_number(base_path):
     counter = [0, 0, 0, 0]
     files = glob.glob(os.path.join(base_path, '*.png'))
     if len(files) == 0:
@@ -55,7 +55,7 @@ if __name__ == '__main__':
                     filemode='w')
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('path',
+    parser.add_argument('-path', '--path', default='../data/train/masks/',
                         help='The image path to filter')
 
     args = parser.parse_args()
@@ -71,8 +71,8 @@ if __name__ == '__main__':
         counter[contains_hero(f)] += 1
  #       pass
 
-    print('no hero = %d' %  counter[0])
-    print('hero very far = %d' %  counter[1])
-    print('hero not too close = %d' %  counter[2])
-    print('hero close = %d' %  counter[3])
+    print('no hero (pixel = 0), file number = %d' %  counter[0])
+    print('hero very far (pixel > 0 and < 40), file number = %d ' %  counter[1])
+    print('hero not too close (pixel >= 40 and < 400), file number = %d' %  counter[2])
+    print('hero close (pixel >= 400), file number = %d' %  counter[3])
     count_type_number(base_path)
