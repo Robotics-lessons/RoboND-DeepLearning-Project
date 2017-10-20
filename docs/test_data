@@ -1,0 +1,125 @@
+no hero = 0 pixels
+hero very far = 1 to 40 pixels
+hero not tool close = 40 to 400 pixels
+hero close = > 400 pixels
+
+
+Flip file
+=========
+import os
+import glob
+from scipy import misc
+import numpy as np
+
+def flip_and_save_images(img_dir, extension):
+  os.chdir(img_dir)
+  files = glob.glob("*." + extension)
+  for i, file in enumerate(files):
+    print(i)
+    img = misc.imread(file, flatten=False, mode='RGB')
+    flipped_img = np.fliplr(img)
+    misc.imsave("flipped" + file, flipped_img)
+
+################
+flip_and_save_images(train_mask_directory, "png")
+flip_and_save_images(train_images_directory, "jpeg")
+
+
+Nadam
+=====
+
+keras.optimizers.Nadam(lr=0.002, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
+
+Nesterov Adam optimizer.
+
+Much like Adam is essentially RMSprop with momentum, Nadam is Adam RMSprop with Nesterov momentum.
+
+Default parameters follow those provided in the paper. It is recommended to leave the parameters of this optimizer at their default values.
+
+Arguments
+
+    lr: float >= 0. Learning rate.
+    beta_1/beta_2: floats, 0 < beta < 1. Generally close to 1.
+    epsilon: float >= 0. Fuzz factor.
+
+
+h5 format
+=========
+
+ This confused me to start off with too. Basically the filetype is already of `h5` type, so all you have to do is add the `.h5` extension when you set the file name.
+shreeyak 8 days ago
+Yeah, adding the extension isn't even necessary. It just runs.
+
+
+Callback
+========
+
+tensorBoard_cb = keras.callbacks.TensorBoard(log_dir='./logs/model1c')
+# checkpoint
+filepath="./saved_chkpts/model1c/weights-improvement-{epoch:02d}-{val_loss:.2f}.h5"
+checkpoint_cb = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=1, period=1)
+callbacks = [tensorBoard_cb, checkpoint_cb]
+
+Path
+====
+
+~/udacity/RoboND-DeepLearning-Project/docs/misc
+
+~/udacity/RoboND-DeepLearning-Project/code
+
+~/udacity/RoboND-DeepLearning-Project/data/train
+
+Question:
+========
+Question about Follow-Me project in Robotics class
+1. 
+
+
+Type of train data
+==================
+no hero = 2576
+hero very far = 521
+hero not too close = 621
+hero close = 413
+
+My current count
+----------------
+found 6249 files in ../data/train/masks
+no hero = 4548
+hero very far = 593
+hero not too close = 691
+hero close = 417
+
+found 1482 files in ../data/validation/masks
+no hero = 1124
+hero very far = 65
+hero not too close = 108
+hero close = 185
+
+Original data
+-------------
+found 2701 files in ../data/original/train/masks
+no hero = 2054
+hero very far = 45
+hero not too close = 189
+hero close = 413
+
+found 1184 files in ../data/original/validation/masks
+no hero = 885
+hero very far = 26
+hero not too close = 88
+hero close = 185
+
+found 1328 files in ../data/processed_sim_data/train/masks
+no hero = 1225
+hero very far = 74
+hero not too close = 29
+hero close = 0
+
+found 790 files in ../data/processed_sim_data/Version-1/train/masks
+no hero = 747
+hero very far = 11
+hero not too close = 28
+hero close = 4
+
+

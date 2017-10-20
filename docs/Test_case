@@ -1,0 +1,265 @@
+inputs :  Tensor("input_1:0", shape=(?, 256, 256, 3), dtype=float32)
+input_layer 1 : Tensor("batch_normalization/batchnorm/add_1:0", shape=(?, 128, 128, 32), dtype=float32)
+input_layer 2 : Tensor("batch_normalization_2/batchnorm/add_1:0", shape=(?, 64, 64, 64), dtype=float32)
+input_layer 3 : Tensor("batch_normalization_3/batchnorm/add_1:0", shape=(?, 32, 32, 128), dtype=float32)
+input_layer 4 : Tensor("batch_normalization_4/batchnorm/add_1:0", shape=(?, 16, 16, 256), dtype=float32)
+input_layer 5 : Tensor("batch_normalization_5/batchnorm/add_1:0", shape=(?, 8, 8, 512), dtype=float32)
+small_ip_layer : Tensor("batch_normalization_6/batchnorm/add_1:0", shape=(?, 8, 8, 1024), dtype=float32)
+output_layer 5:  Tensor("batch_normalization_7/batchnorm/add_1:0", shape=(?, 16, 16, 512), dtype=float32)
+output_layer 4:  Tensor("batch_normalization_8/batchnorm/add_1:0", shape=(?, 32, 32, 256), dtype=float32)
+output_layer 3:  Tensor("batch_normalization_9/batchnorm/add_1:0", shape=(?, 64, 64, 128), dtype=float32)
+output_layer 2:  Tensor("batch_normalization_10/batchnorm/add_1:0", shape=(?, 128, 128, 64), dtype=float32)
+output_layer 1:  Tensor("batch_normalization_11/batchnorm/add_1:0", shape=(?, 256, 256, 3), dtype=float32)
+
+1. Test case
+=============
+image_hw =  256
+
+learning_rate = 0.0005
+batch_size = 32
+num_epochs = 20
+steps_per_epoch = 195
+validation_steps = 46
+
+First 20 epochs
+---------------
+195/195 [==============================] - 212s - loss: 0.0157 - val_loss: 0.0276
+Time: 4259.57s
+
+average intersection over union for the hero is 0.0581205159465185
+number true positives: 51, number false positives: 0, number false negatives: 261
+weight = 0.677382319173364
+final_IoU =   0.485533919972
+final_score =  0.328892092748
+
+Second 20 epochs
+----------------
+195/195 [==============================] - 212s - loss: 0.0049 - val_loss: 0.0314
+Time: 4243.06s
+
+average intersection over union for the hero is 0.07163811719846472
+number true positives: 67, number false positives: 0, number false negatives: 245
+weight = 0.6933638443935927
+final_IoU =   0.503894251779
+final_score =  0.349382055581
+
+Third 20 epochs
+----------------
+195/195 [==============================] - 211s - loss: 0.0038 - val_loss: 0.0327
+Time: 4254.08s
+
+average intersection over union for the hero is 0.09098079208193126
+number true positives: 75, number false positives: 0, number false negatives: 237
+weight = 0.6883408071748879
+final_IoU =   0.517305656021
+final_score =  0.356082592822
+
+Fourth 20 epochs
+----------------
+195/195 [==============================] - 212s - loss: 0.0033 - val_loss: 0.0447
+Time: 4247.92s
+
+average intersection over union for the hero is 0.08696183361175529
+number true positives: 87, number false positives: 1, number false negatives: 225
+weight = 0.7065462753950339
+final_IoU =   0.512822767664
+final_score =  0.36233301643
+
+Fifth 20 epochs
+----------------
+195/195 [==============================] - 211s - loss: 0.0029 - val_loss: 0.0294
+Time: 4251.26s
+
+average intersection over union for the hero is 0.09323987150716624
+number true positives: 77, number false positives: 1, number false negatives: 235
+weight = 0.691358024691358
+final_IoU =   0.51921760806
+final_score =  0.358965259893
+
+
+New training test data
+======================
+97/97 [==============================] - 110s - loss: 0.0089 - val_loss: 0.0246
+number of validation samples intersection over the union evaulated on 542
+average intersection over union for background is 0.9958907024789436
+average intersection over union for other people is 0.35864652435790617
+average intersection over union for the hero is 0.8966672332459394
+number true positives: 539, number false positives: 0, number false negatives: 0
+number of validation samples intersection over the union evaulated on 270
+average intersection over union for background is 0.988852756546216
+average intersection over union for other people is 0.7736181389606956
+average intersection over union for the hero is 0.0
+number true positives: 0, number false positives: 61, number false negatives: 0
+number of validation samples intersection over the union evaulated on 322
+average intersection over union for background is 0.9965498628163509
+average intersection over union for other people is 0.44869857503814636
+average intersection over union for the hero is 0.2114048002086021
+number true positives: 140, number false positives: 1, number false negatives: 172
+
+2017-10-18 10:23:18,038 INFO epoch number = 7, loss = 0.008896, val_loss = 0.024638
+2017-10-18 10:23:34,696 INFO weight = 0.743702 
+2017-10-18 10:23:34,697 INFO IoU no hero - 0.5540360167272708
+2017-10-18 10:23:34,697 INFO Final Grade - 0.41203773861754306
+2017-10-18 10:23:34,697 INFO Model weight file name = 0.0005_0.412037738618_model_2017-10-18-10-23-34.h5
+
+----------------------------------------------------------------------
+97/97 [==============================] - 109s - loss: 0.0071 - val_loss: 0.0194
+number of validation samples intersection over the union evaulated on 542
+average intersection over union for background is 0.9965086718439901
+average intersection over union for other people is 0.39128422211632635
+average intersection over union for the hero is 0.9194076452296225
+number true positives: 539, number false positives: 0, number false negatives: 0
+number of validation samples intersection over the union evaulated on 270
+average intersection over union for background is 0.9908698281042476
+average intersection over union for other people is 0.8198086182386942
+average intersection over union for the hero is 0.0
+number true positives: 0, number false positives: 21, number false negatives: 0
+number of validation samples intersection over the union evaulated on 322
+average intersection over union for background is 0.99712765143551
+average intersection over union for other people is 0.46498602535581823
+average intersection over union for the hero is 0.19118076842970244
+number true positives: 120, number false positives: 0, number false negatives: 192
+
+2017-10-18 10:27:30,963 INFO epoch number = 9, loss = 0.007128, val_loss = 0.019432
+2017-10-18 10:27:47,054 INFO weight = 0.755734 
+2017-10-18 10:27:47,054 INFO IoU no hero - 0.5552942068296625
+2017-10-18 10:27:47,054 INFO Final Grade - 0.4196546815375546
+2017-10-18 10:27:47,054 INFO Model weight file name = 0.0005_0.419654681538_model_2017-10-18-10-27-47.h5
+
+----------------------------------------------------------------------
+97/97 [==============================] - 110s - loss: 0.0068 - val_loss: 0.0277
+number of validation samples intersection over the union evaulated on 542
+average intersection over union for background is 0.9964023631328823
+average intersection over union for other people is 0.3848563237843435
+average intersection over union for the hero is 0.9251568778923128
+number true positives: 539, number false positives: 0, number false negatives: 0
+number of validation samples intersection over the union evaulated on 270
+average intersection over union for background is 0.9901484698012928
+average intersection over union for other people is 0.802536716362102
+average intersection over union for the hero is 0.0
+number true positives: 0, number false positives: 32, number false negatives: 0
+number of validation samples intersection over the union evaulated on 322
+average intersection over union for background is 0.9971281237032656
+average intersection over union for other people is 0.46216292758308813
+average intersection over union for the hero is 0.199975670702692
+number true positives: 130, number false positives: 0, number false negatives: 182
+
+2017-10-18 10:33:48,919 INFO epoch number = 12, loss = 0.006790, val_loss = 0.027673
+2017-10-18 10:34:04,874 INFO weight = 0.757644 
+2017-10-18 10:34:04,874 INFO IoU no hero - 0.5625662742975024
+2017-10-18 10:34:04,874 INFO Final Grade - 0.42622518403740556
+2017-10-18 10:34:04,874 INFO Model weight file name = 0.0005_0.426225184037_model_2017-10-18-10-34-04.h5
+
+----------------------------------------------------------------------
+97/97 [==============================] - 108s - loss: 0.0060 - val_loss: 0.0217
+number of validation samples intersection over the union evaulated on 542
+average intersection over union for background is 0.9965286227903655
+average intersection over union for other people is 0.39853562281816685
+average intersection over union for the hero is 0.928911705195244
+number true positives: 539, number false positives: 0, number false negatives: 0
+number of validation samples intersection over the union evaulated on 270
+average intersection over union for background is 0.9912207452641877
+average intersection over union for other people is 0.8246391773400095
+average intersection over union for the hero is 0.0
+number true positives: 0, number false positives: 40, number false negatives: 0
+number of validation samples intersection over the union evaulated on 322
+average intersection over union for background is 0.9972305671868077
+average intersection over union for other people is 0.4766894582844852
+average intersection over union for the hero is 0.2076331416487219
+number true positives: 136, number false positives: 0, number false negatives: 176
+
+2017-10-18 10:50:37,444 INFO epoch number = 4, loss = 0.006000, val_loss = 0.021739
+2017-10-18 10:50:53,352 INFO weight = 0.757576 
+2017-10-18 10:50:53,353 INFO IoU no hero - 0.5682724234219829
+2017-10-18 10:50:53,353 INFO Final Grade - 0.4305094116833204
+2017-10-18 10:50:53,353 INFO Model weight file name = 0.0002_0.430509411683_model_2017-10-18-10-50-53.h5
+
+----------------------------------------------------------------------
+2017-10-18 10:59:16,140 INFO Final Grade - 0.4160984842800542
+2017-10-18 10:59:16,140 INFO Score no long improving at epoch = 7
+2017-10-18 10:59:16,140 INFO Best score = 0.4305094116833204
+2017-10-18 10:59:16,140 INFO Data ---  [4, 0.43050941168332041, 0.56827242342198292, 0.7575757575757576, '0.0002_0.430509411683_model_2017-10-18-10-50-53.h5']
+2017-10-18 10:59:16,140 INFO Time: 1006.58s
+
+====================================================================
+
+
+2017-10-18 13:57:45,620 INFO epoch number = 22, loss = 0.004581, val_loss = 0.026285
+2017-10-18 13:58:01,255 INFO weight = 0.734824 
+2017-10-18 13:58:01,256 INFO IoU no hero - 0.6012098938261455
+2017-10-18 13:58:01,256 INFO Final Grade - 0.4417836280511613
+2017-10-18 13:58:01,256 INFO Model weight file name = 0.0005_0.441783628051_model_2017-10-18-13-58-01.h5
+
+====================================================================
+
+236/236 [==============================] - 261s - loss: 0.0080 - val_loss: 0.0309
+number of validation samples intersection over the union evaulated on 542
+average intersection over union for background is 0.9962648276313562
+average intersection over union for other people is 0.3986941799174031
+average intersection over union for the hero is 0.9327211922465171
+number true positives: 539, number false positives: 0, number false negatives: 0
+number of validation samples intersection over the union evaulated on 270
+average intersection over union for background is 0.9892859143589434
+average intersection over union for other people is 0.7853875875987207
+average intersection over union for the hero is 0.0
+number true positives: 0, number false positives: 57, number false negatives: 0
+number of validation samples intersection over the union evaulated on 322
+average intersection over union for background is 0.9971946496781527
+average intersection over union for other people is 0.4826888834792828
+average intersection over union for the hero is 0.22586316401922646
+number true positives: 140, number false positives: 1, number false negatives: 172
+
+2017-10-20 00:44:27,198 INFO [==== learning rate = 0.001000 ====] epoch number = 27, loss = 0.007981, val_loss = 0.030856
+2017-10-20 00:44:42,937 INFO weight = 0.746975 
+2017-10-20 00:44:42,938 INFO IoU no hero - 0.5792921781328717
+2017-10-20 00:44:42,938 INFO Final Grade - 0.4327165995073926
+2017-10-20 00:44:42,938 INFO Quad behind the target
+2017-10-20 00:44:42,938 INFO number true positives: 539, number false positives: 0, number false negatives: 0
+2017-10-20 00:44:42,938 INFO average intersection over union for the hero is 0.932721
+2017-10-20 00:44:42,938 INFO Target not visible
+2017-10-20 00:44:42,938 INFO number true positives: 0, number false positives: 57, number false negatives: 0
+2017-10-20 00:44:42,938 INFO average intersection over union for the hero is 0.000000
+2017-10-20 00:44:42,938 INFO Target far away
+2017-10-20 00:44:42,938 INFO number true positives: 140, number false positives: 1, number false negatives: 172
+2017-10-20 00:44:42,938 INFO average intersection over union for the hero is 0.225863
+2017-10-20 00:44:42,938 INFO Model weight file name = 0.001_0.432716599507_model_2017-10-20-00-44-42.h5
+
+====================================================================
+236/236 [==============================] - 265s - loss: 0.0065 - val_loss: 0.0273
+number of validation samples intersection over the union evaulated on 542
+average intersection over union for background is 0.9966299392160006
+average intersection over union for other people is 0.4262138032784614
+average intersection over union for the hero is 0.941056498362849
+number true positives: 539, number false positives: 0, number false negatives: 0
+number of validation samples intersection over the union evaulated on 270
+average intersection over union for background is 0.990500069409552
+average intersection over union for other people is 0.8154973057626096
+average intersection over union for the hero is 0.0
+number true positives: 0, number false positives: 31, number false negatives: 0
+number of validation samples intersection over the union evaulated on 322
+average intersection over union for background is 0.997071738369288
+average intersection over union for other people is 0.48694272888643103
+average intersection over union for the hero is 0.2420349581819363
+number true positives: 134, number false positives: 0, number false negatives: 178
+
+2017-10-20 08:40:21,920 INFO [==== learning rate = 0.001000 ====] epoch number = 33, loss = 0.006528, val_loss = 0.027290
+2017-10-20 08:40:37,544 INFO weight = 0.763039 
+2017-10-20 08:40:37,544 INFO IoU no hero - 0.5915457282723926
+2017-10-20 08:40:37,544 INFO Final Grade - 0.45137219402190504
+2017-10-20 08:40:37,544 INFO Quad behind the target
+2017-10-20 08:40:37,544 INFO number true positives: 539, number false positives: 0, number false negatives: 0
+2017-10-20 08:40:37,544 INFO average intersection over union for the hero is 0.941056
+2017-10-20 08:40:37,544 INFO Target not visible
+2017-10-20 08:40:37,544 INFO number true positives: 0, number false positives: 31, number false negatives: 0
+2017-10-20 08:40:37,544 INFO average intersection over union for the hero is 0.000000
+2017-10-20 08:40:37,544 INFO Target far away
+2017-10-20 08:40:37,544 INFO number true positives: 134, number false positives: 0, number false negatives: 178
+2017-10-20 08:40:37,544 INFO average intersection over union for the hero is 0.242035
+2017-10-20 08:40:37,544 INFO Model weight file name = 0.001_0.451372194022_model_2017-10-20-08-40-37.h5
+
+====================================================================
+
+
+
+
+
