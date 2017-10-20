@@ -74,10 +74,11 @@ if __name__ == '__main__':
         os.makedirs(to_mask_dir)
     if not os.path.exists(to_images_dir):
         os.makedirs(to_images_dir)
-#    print(mask_dir)
-#    print(images_dir)
+    print(from_mask_dir)
+    print(from_images_dir)
 
     moved_file_count = 0
+    print(os.path.join(from_mask_dir, '*.png'))
     files = glob.glob(os.path.join(from_mask_dir, '*.png'))
     if len(files) == 0:
         print('No files found in ', from_mask_dir)
