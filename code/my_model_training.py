@@ -150,9 +150,10 @@ if __name__ == "__main__":
     path = base_path + '/train/masks'
     cft.count_type_number(path)
     t1 = time.time()
+    lowest_loss_num_epoch = num_epochs
+    best_score_num_epoch = num_epochs
     for learning_rate in learning_rates:
-        best_score_num_epoch = num_epochs
-        lowest_loss_num_epoch = num_epochs
+        
         logging.info('================================================================')
         logging.info('learning rate = %f' % learning_rate)
         logging.info('batch_size = %d' % batch_size)
@@ -288,6 +289,8 @@ if __name__ == "__main__":
         logging.info('Data ---  {}'.format(arr))
         t2 = time.time()
         logging.info("Time: %0.2fs" % (t2 - t01))
+        lowest_loss_num_epoch = 1 
+        best_score_num_epoch = 1
 
     logging.info("Total Time: %0.2fs" % (t2 - t1)) 
 
