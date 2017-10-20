@@ -149,7 +149,7 @@ if __name__ == "__main__":
     lowest_loss = 10.0
     path = base_path + '/train/masks'
     cft.count_type_number(path)
-
+    t1 = time.time()
     for learning_rate in learning_rates:
         best_score_num_epoch = num_epochs
         lowest_loss_num_epoch = num_epochs
@@ -178,10 +178,9 @@ if __name__ == "__main__":
                                                      image_shape=image_shape)
  
         logging.info('score = %f' % score)
-        t1 = time.time()
+        t01 = time.time()
         for i in range(num_epochs):
-            t01 = time.time()       
-  
+
         # Logs
         #    logger_cb = plotting_tools.LoggerPlotter()
         #    callbacks = [logger_cb]
@@ -196,7 +195,7 @@ if __name__ == "__main__":
                             workers = workers)
             loss_value = history.history['loss'][0]
             validation_loss = history.history['val_loss'][0]
-            logging.info('[==============================] epoch number = %d, loss = %f, val_loss = %f' % (i + 1, loss_value, validation_loss))
+            logging.info('[==== learning rate = %f ====] epoch number = %d, loss = %f, val_loss = %f' % (learning_rate, i + 1, loss_value, validation_loss))
             if loss_value < lowest_loss:
                 lowest_loss = loss_value
                 lowest_loss_num_epoch = i
