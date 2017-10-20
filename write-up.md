@@ -319,4 +319,40 @@ Define and tune the hyperparameters.
     workers = 2
   
 
+### Run training code
 
+```
+import time
+"""
+DON'T MODIFY ANYTHING IN THIS CELL THAT IS BELOW THIS LINE
+"""
+#Define the Keras model and compile it for training
+model = models.Model(inputs=inputs, outputs=output_layer)
+
+model.compile(optimizer=keras.optimizers.Adam(learning_rate), loss='categorical_crossentropy')
+
+t1 = time.time()
+
+#Data iterators for loading the training and validation data
+train_iter = data_iterator.BatchIteratorSimple(batch_size=batch_size,
+                                               data_folder=os.path.join('..', 'data', 'train'),
+                                               image_shape=image_shape,
+                                               shift_aug=True)
+
+val_iter = data_iterator.BatchIteratorSimple(batch_size=batch_size,
+                                             data_folder=os.path.join('..', 'data', 'validation'),
+                                             image_shape=image_shape)
+
+logger_cb = plotting_tools.LoggerPlotter()
+callbacks = [logger_cb]
+
+model.fit_generator(train_iter,
+                    steps_per_epoch = steps_per_epoch, # the number of batches per epoch,
+                    epochs = num_epochs, # the number of epochs to train for,
+                    validation_data = val_iter, # validation iterator
+                    validation_steps = validation_steps, # the number of batches to validate on
+                    callbacks=callbacks,
+                    workers = workers)
+t2 = time.time()
+print("Time: %0.2fs" % (t2 - t1))
+```
