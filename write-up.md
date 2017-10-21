@@ -318,7 +318,7 @@ Define and tune the hyperparameters.
     validation_steps = 50
     workers = 2
   
-## Run training code
+## Training code
 
     import time
 
@@ -354,14 +354,20 @@ Define and tune the hyperparameters.
     t2 = time.time()
     print("Time: %0.2fs" % (t2 - t1))
 
+## Run training code
+The real training code can be found in ./code/my_model_training.py
+
+[image_2]: ./docs/misc/training_flow.png 
+![alt text][image_2] 
+
 # Prediction 
-Now that you have your model trained and saved, you can make predictions on your validation dataset. These predictions can be compared to the mask images, which are the ground truth labels, to evaluate how well your model is doing under different conditions.
+The predictions is based on the validation dataset. These predictions can be compared to the mask images, which are the ground truth labels, to evaluate how well the model is doing under different conditions.
 There are three different predictions available from the helper code provided:
     1.patrol_with_targ: Test how well the network can detect the hero from a distance.
     2.patrol_non_targ: Test how often the network makes a mistake and identifies the wrong person as the target.
     3.following_images: Test how well the network can identify the target while following them.
 
-The following cell will write predictions to files and return paths to the appropriate directories. The run_num parameter is used to define or group all the data for a particular model run. You can change it for different runs. For example, 'run_1', 'run_2' etc.
+The following cell will write predictions to files and return paths to the appropriate directories. The run_num parameter is used to define or group all the data for a particular model run. 
 
 
     run_num = 'run_3'
@@ -375,7 +381,7 @@ The following cell will write predictions to files and return paths to the appro
     val_following, pred_following = model_tools.write_predictions_grade_set(model,
                                         run_num,'following_images', 'sample_evaluation_data')
 
-# Evaluation 
+# Evaluation results
 Evaluate the model! The following cells include several different scores to help evaluating the model under the different conditions discussed during the Prediction step.
 
     # Scores for while the quad is following behind the target. 
@@ -439,5 +445,7 @@ final_IoU =   0.5915457282723926
     print('final_score = ',final_score)
 
 final_score =  0.45137219402190504
+
+
 
 
