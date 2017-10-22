@@ -307,13 +307,13 @@ output_layer 1:  Tensor("batch_normalization_123/batchnorm/add_1:0", shape=(?, 2
 
 Define and tune the hyperparameters.
 
-    batch_size: number of training samples/images that get propagated through the network in a single pass.
-    num_epochs: number of times the entire training dataset gets propagated through the network.
-    steps_per_epoch: number of batches of training images that go through the network in 1 epoch. 
-      One recommended value to try would be based on the total number of images in training dataset divided by the batch_size.
-    validation_steps: number of batches of validation images that go through the network in 1 epoch. 
-      This is similar to steps_per_epoch, except validation_steps is for the validation dataset.     
-    workers: maximum number of processes to spin up. This can affect the training speed and is dependent on the hardware.
+ batch_size: number of training samples/images that get propagated through the network in a single pass.
+ num_epochs: number of times the entire training dataset gets propagated through the network.
+ steps_per_epoch: number of batches of training images that go through the network in 1 epoch. 
+ One recommended value to try would be based on the total number of images in training dataset divided by the batch_size.
+ validation_steps: number of batches of validation images that go through the network in 1 epoch. 
+ This is similar to steps_per_epoch, except validation_steps is for the validation dataset.     
+ workers: maximum number of processes to spin up. This can affect the training speed and is dependent on the hardware.
 
     learning_rate = 0.001
     batch_size = 32
@@ -359,7 +359,7 @@ Define and tune the hyperparameters.
     print("Time: %0.2fs" % (t2 - t1))
 
 ## Run training code
-The real training code can be found in ./code/my_model_training.py
+The python training code can be found in ./code/my_model_training.py
 
 [image_2]: ./docs/misc/training_flow.png 
 ![alt text][image_2] 
@@ -450,11 +450,12 @@ final_IoU =   0.5915457282723926
 
 final_score =  0.45137219402190504
 
-# Experimentation found
+# Experimentation and testing
 1. For final score is great .40, the loss value should be lower than 0.01
 2. It is not always true that lower loss value related higher final score
 3. Add more train data can improve the final score
-4. 
+4. The best learning rate is 0.005 for this training model
+
 # Future Enhancements
 1. Try different Optimizer
 2. Try to record more data samples
