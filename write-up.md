@@ -7,11 +7,11 @@ In this project, you will train a deep neural network to identify and track a ta
 [image_0]: ./docs/misc/sim_screenshot.png 
 ![alt text][image_0] 
 
-## Setup Instructions
+## Setup Instructions ##
 **Clone the repository**
-```
-$ git clone https://github.com/udacity/RoboND-DeepLearning.git
-```
+
+    $ git clone https://github.com/udacity/RoboND-DeepLearning.git
+
 
 **Download the data**
 
@@ -138,12 +138,17 @@ Share your scores in slack, and keep a tally in a pinned message. Scores should 
 1. Copy your saved model to the weights directory `data/weights`.
 2. Launch the simulator, select "Spawn People", and then click the "Follow Me" button.
 3. Run the realtime follower script
-```
-$ python follower.py my_amazing_model.h5
-```
+
+    $ python follower.py my_amazing_model.h5
+
 
 ## Model Architecture ##
-Using fully convolutional network (FCN) to build this model architecture. It uses 6 encoder_block layers and the 1x1 convolution layer, plus 6 decoder_block layers.
+Using fully convolutional network (FCN) to build this model architecture. 
+
+1. 6 encoder_block for encoder layers 
+2. the 1x1 convolution layer
+3. 6 decoder_block for decoder layers.
+4. 4 skip connections between the encoder and decoder layers.
 
 [image_1]: ./docs/misc/FCNArchitecture.png 
 ![alt text][image_1]
@@ -152,30 +157,30 @@ Using fully convolutional network (FCN) to build this model architecture. It use
 
 The Encoder for FCN will essentially require separable convolution layers. The 1x1 convolution layer in the FCN, however, is a regular convolution. Implementations for both are provided below for using. Each includes batch normalization with the ReLU activation function applied to the layers.
 
-```
-def separable_conv2d_batchnorm(input_layer, filters, strides=1):
+
+    def separable_conv2d_batchnorm(input_layer, filters, strides=1):
     output_layer = SeparableConv2DKeras(filters=filters,kernel_size=3, strides=strides,
                              padding='same', activation='relu')(input_layer)
     
     output_layer = layers.BatchNormalization()(output_layer) 
     return output_layer
 
-def conv2d_batchnorm(input_layer, filters, kernel_size=3, strides=1):
+    def conv2d_batchnorm(input_layer, filters, kernel_size=3, strides=1):
     output_layer = layers.Conv2D(filters=filters, kernel_size=kernel_size, strides=strides, 
                       padding='same', activation='relu')(input_layer)
     
     output_layer = layers.BatchNormalization()(output_layer) 
     return output_layer
-```
+
 
 ### Bilinear Upsampling
 
 The following helper function implements the bilinear upsampling layer. Upsampling by a factor of 2 is generally recommended. Upsampling is used in the decoder block of the FCN.
-```
-def bilinear_upsample(input_layer):
+ 
+    def bilinear_upsample(input_layer):
         output_layer = BilinearUpSampling2D((2,2))(input_layer)
     return output_layer
-```
+
 
 ## Build the Model
 
@@ -185,13 +190,13 @@ def bilinear_upsample(input_layer):
 
 Create an encoder block that includes a separable convolution layer using the separable_conv2d_batchnorm() function. The filters parameter defines the size or depth of the output layer. For example, 32 or 64.
 
-```
-def encoder_block(input_layer, filters, strides):
+
+    def encoder_block(input_layer, filters, strides):
     
     # TODO Create a separable convolution layer using the separable_conv2d_batchnorm() function.
     output_layer = separable_conv2d_batchnorm(input_layer, filters, strides=strides)    
     return output_layer
-```
+
 
 ### Decoder Block
 
@@ -199,10 +204,10 @@ The decoder block is comprised of three parts:
 
    A bilinear upsampling layer using the upsample_bilinear() function. The current recommended factor for upsampling is set to 2.
    A layer concatenation step. This step is similar to skip connections. The data will be concatenated by the upsampled small_ip_layer and the large_ip_layer.
-    Some (one or two) additional separable convolution layers to extract some more spatial information from prior layers.
-    If condition statement will check input large_ip_layer value is None or not, if it is None, then skip the concatenating function.
-```
-def decoder_block(small_ip_layer, large_ip_layer, filters):
+   Some (one or two) additional separable convolution layers to extract some more spatial information from prior layers.
+   If condition statement will check input large_ip_layer value is None or not, if it is None, then skip the concatenating function.
+
+    def decoder_block(small_ip_layer, large_ip_layer, filters):
     
     # TODO Upsample the small input layer using the bilinear_upsample() function.
     upsampled_layer = bilinear_upsample(small_ip_layer)
@@ -217,7 +222,7 @@ def decoder_block(small_ip_layer, large_ip_layer, filters):
     output_layer = separable_conv2d_batchnorm(concatenate_layer, filters)
  
     return output_layer
-```
+
 
 ### Model Function
 
@@ -227,60 +232,59 @@ There are three steps to build a FCN architecture:
    2. Add a 1x1 Convolution layer using the conv2d_batchnorm() function. Remember that 1x1 Convolutions require a kernel and stride of 1.
    3. Add decoder blocks for the decoder layers.
    
-```
-def fcn_model(inputs, num_classes, filters=32):
-    print('inputs : ',inputs)     
-    #TODO Add Encoder Blocks. 
-    #Remember that with each encoder layer, the depth of your model (the number of filters) increases.
-    input_layer1 = encoder_block(inputs, filters, 2)
-    input_layer2 = encoder_block(input_layer1, filters*2, 2)  
-    input_layer3 = encoder_block(input_layer2, filters*4, 2) 
-    input_layer4 = encoder_block(input_layer3, filters*8, 2) 
-    input_layer5 = encoder_block(input_layer4, filters*16, 2) 
-    input_layer6 = encoder_block(input_layer5, filters*32, 2) 
+    def fcn_model(inputs, num_classes, filters=32):
+        print('inputs : ',inputs)     
+        # TODO Add Encoder Blocks. 
+        # Remember that with each encoder layer, the depth of your model (the number of filters) increases.
+        input_layer1 = encoder_block(inputs, filters, 2)
+        input_layer2 = encoder_block(input_layer1, filters*2, 2)  
+        input_layer3 = encoder_block(input_layer2, filters*4, 2) 
+        input_layer4 = encoder_block(input_layer3, filters*8, 2) 
+        input_layer5 = encoder_block(input_layer4, filters*16, 2) 
+        input_layer6 = encoder_block(input_layer5, filters*32, 2) 
 
-    print('input_layer 1 :',input_layer1)
-    print('input_layer 2 :',input_layer2)
-    print('input_layer 3 :',input_layer3)
-    print('input_layer 4 :',input_layer4) 
-    print('input_layer 5 :',input_layer5)
-    print('input_layer 6 :',input_layer6)
+        print('input_layer 1 :',input_layer1)
+        print('input_layer 2 :',input_layer2)
+        print('input_layer 3 :',input_layer3)
+        print('input_layer 4 :',input_layer4) 
+        print('input_layer 5 :',input_layer5)
+        print('input_layer 6 :',input_layer6)
     
-    #TODO Add 1x1 Convolution layer using conv2d_batchnorm().
-    small_ip_layer = conv2d_batchnorm(input_layer6, filters*64, kernel_size=1, strides=1)
-    print('small_ip_layer :',small_ip_layer) 
+        # TODO Add 1x1 Convolution layer using conv2d_batchnorm().
+        small_ip_layer = conv2d_batchnorm(input_layer6, filters*64, kernel_size=1, strides=1)
+        print('small_ip_layer :',small_ip_layer) 
     
-    #TODO: Add the same number of Decoder Blocks as the number of Encoder Blocks
-    output_layer6 = decoder_block(small_ip_layer, input_layer5, filters*32) 
-    print('output_layer 6: ', output_layer6) 
-    output_layer5 = decoder_block(output_layer6, input_layer4, filters*16) 
-    print('output_layer 5: ', output_layer5) 
-    output_layer4 = decoder_block(output_layer5, input_layer3, filters*8)  
-    print('output_layer 4: ', output_layer4) 
-    output_layer3 = decoder_block(output_layer4, input_layer2, filters*4)  
-    print('output_layer 3: ', output_layer3) 
-    output_layer2 = decoder_block(output_layer3, input_layer1, filters*2) 
-    print('output_layer 2: ', output_layer2) 
-    output_layer1 = decoder_block(output_layer2, None, 3) 
-    print('output_layer 1: ', output_layer1) 
+        # TODO: Add the same number of Decoder Blocks as the number of Encoder Blocks
+        output_layer6 = decoder_block(small_ip_layer, input_layer5, filters*32) 
+        print('output_layer 6: ', output_layer6) 
+        output_layer5 = decoder_block(output_layer6, input_layer4, filters*16) 
+        print('output_layer 5: ', output_layer5) 
+        output_layer4 = decoder_block(output_layer5, input_layer3, filters*8)  
+        print('output_layer 4: ', output_layer4) 
+        output_layer3 = decoder_block(output_layer4, input_layer2, filters*4)  
+        print('output_layer 3: ', output_layer3) 
+        output_layer2 = decoder_block(output_layer3, input_layer1, filters*2) 
+        print('output_layer 2: ', output_layer2) 
+        output_layer1 = decoder_block(output_layer2, None, 3) 
+        print('output_layer 1: ', output_layer1) 
     
-    #The function returns the output layer of your model. "x" is the final layer obtained from the last decoder_block()
-    return layers.Conv2D(num_classes, 1, activation='softmax', padding='same')(output_layer1)
-```
+        # The function returns the output layer of your model. "x" is the final layer obtained from the last decoder_block()
+        return layers.Conv2D(num_classes, 1, activation='softmax', padding='same')(output_layer1)
+
 
 ## Training
 
 The following cells will use the FCN you created and define an ouput layer based on the size of the processed image and the number of classes recognized. The hyperparameters will be defined to compile and train the model.
 
-```
-image_hw = 256
-image_shape = (image_hw, image_hw, 3)
-inputs = layers.Input(image_shape)
-num_classes = 3
 
-#Call fcn_model()
-output_layer = fcn_model(inputs, num_classes)
-```
+    image_hw = 256
+    image_shape = (image_hw, image_hw, 3)
+    inputs = layers.Input(image_shape)
+    num_classes = 3
+
+    #Call fcn_model()
+    output_layer = fcn_model(inputs, num_classes)
+
 
 #### List shape for each layer in the model:
 ```
@@ -303,56 +307,168 @@ output_layer 1:  Tensor("batch_normalization_123/batchnorm/add_1:0", shape=(?, 2
 
 Define and tune the hyperparameters.
 
-    batch_size: number of training samples/images that get propagated through the network in a single pass.
-    num_epochs: number of times the entire training dataset gets propagated through the network.
-    steps_per_epoch: number of batches of training images that go through the network in 1 epoch. 
-      One recommended value to try would be based on the total number of images in training dataset divided by the batch_size.
-    validation_steps: number of batches of validation images that go through the network in 1 epoch. 
-      This is similar to steps_per_epoch, except validation_steps is for the validation dataset.     
-    workers: maximum number of processes to spin up. This can affect the training speed and is dependent on the hardware.
+ batch_size: number of training samples/images that get propagated through the network in a single pass.
+ num_epochs: number of times the entire training dataset gets propagated through the network.
+ steps_per_epoch: number of batches of training images that go through the network in 1 epoch. 
+ One recommended value to try would be based on the total number of images in training dataset divided by the batch_size.
+ validation_steps: number of batches of validation images that go through the network in 1 epoch. 
+ This is similar to steps_per_epoch, except validation_steps is for the validation dataset.     
+ workers: maximum number of processes to spin up. This can affect the training speed and is dependent on the hardware.
 
-    learning_rate = 0.0002
+    learning_rate = 0.001
     batch_size = 32
-    num_epochs = 40
+    num_epochs = 80
     steps_per_epoch = 200
     validation_steps = 50
     workers = 2
   
+## Training code
 
-### Run training code
+    import time
 
-```
-import time
-"""
-DON'T MODIFY ANYTHING IN THIS CELL THAT IS BELOW THIS LINE
-"""
-#Define the Keras model and compile it for training
-model = models.Model(inputs=inputs, outputs=output_layer)
+    # Define the Keras model and compile it for training
+    model = models.Model(inputs=inputs, outputs=output_layer)
 
-model.compile(optimizer=keras.optimizers.Adam(learning_rate), loss='categorical_crossentropy')
+    model.compile(optimizer=keras.optimizers.Adam(learning_rate), loss='categorical_crossentropy')
 
-t1 = time.time()
+    t1 = time.time()
 
-#Data iterators for loading the training and validation data
-train_iter = data_iterator.BatchIteratorSimple(batch_size=batch_size,
-                                               data_folder=os.path.join('..', 'data', 'train'),
+    # Data iterators for loading the training and validation data
+    train_iter = data_iterator.BatchIteratorSimple(batch_size=batch_size,
+                                                    data_folder=os.path.join('..', 'data', 'train'),
                                                image_shape=image_shape,
                                                shift_aug=True)
 
-val_iter = data_iterator.BatchIteratorSimple(batch_size=batch_size,
+    val_iter = data_iterator.BatchIteratorSimple(batch_size=batch_size,
                                              data_folder=os.path.join('..', 'data', 'validation'),
                                              image_shape=image_shape)
 
-logger_cb = plotting_tools.LoggerPlotter()
-callbacks = [logger_cb]
+    logger_cb = plotting_tools.LoggerPlotter()
+    callbacks = [logger_cb]
 
-model.fit_generator(train_iter,
+    history = model.fit_generator(train_iter,
                     steps_per_epoch = steps_per_epoch, # the number of batches per epoch,
                     epochs = num_epochs, # the number of epochs to train for,
                     validation_data = val_iter, # validation iterator
                     validation_steps = validation_steps, # the number of batches to validate on
                     callbacks=callbacks,
                     workers = workers)
-t2 = time.time()
-print("Time: %0.2fs" % (t2 - t1))
-```
+    print(history)
+
+    t2 = time.time()
+    print("Time: %0.2fs" % (t2 - t1))
+
+## Run training code
+The python training code can be found in ./code/my_model_training.py
+
+[image_2]: ./docs/misc/training_flow.png 
+![alt text][image_2] 
+
+# Prediction 
+The predictions is based on the validation dataset. These predictions can be compared to the mask images, which are the ground truth labels, to evaluate how well the model is doing under different conditions.
+There are three different predictions available from the helper code provided:
+    1.patrol_with_targ: Test how well the network can detect the hero from a distance.
+    2.patrol_non_targ: Test how often the network makes a mistake and identifies the wrong person as the target.
+    3.following_images: Test how well the network can identify the target while following them.
+
+The following cell will write predictions to files and return paths to the appropriate directories. The run_num parameter is used to define or group all the data for a particular model run. 
+
+
+    run_num = 'run_3'
+
+    val_with_targ, pred_with_targ = model_tools.write_predictions_grade_set(model,
+                                        run_num,'patrol_with_targ', 'sample_evaluation_data') 
+
+    val_no_targ, pred_no_targ = model_tools.write_predictions_grade_set(model, 
+                                        run_num,'patrol_non_targ', 'sample_evaluation_data') 
+
+    val_following, pred_following = model_tools.write_predictions_grade_set(model,
+                                        run_num,'following_images', 'sample_evaluation_data')
+
+# Evaluation results
+Evaluate the model! The following cells include several different scores to help evaluating the model under the different conditions discussed during the Prediction step.
+
+    # Scores for while the quad is following behind the target. 
+    true_pos1, false_pos1, false_neg1, iou1 = scoring_utils.score_run_iou(val_following, pred_following)
+
+number of validation samples intersection over the union evaulated on 542
+
+average intersection over union for background is 0.9966299392160006
+
+average intersection over union for other people is 0.4262138032784614
+
+average intersection over union for the hero is 0.941056498362849
+
+number true positives: 539, number false positives: 0, number false negatives: 0
+
+
+    # Scores for images while the quad is on patrol and the target is not visable
+    true_pos2, false_pos2, false_neg2, iou2 = scoring_utils.score_run_iou(val_no_targ, pred_no_targ)
+
+number of validation samples intersection over the union evaulated on 270
+
+average intersection over union for background is 0.990500069409552
+
+average intersection over union for other people is 0.8154973057626096
+
+average intersection over union for the hero is 0.0
+
+number true positives: 0, number false positives: 31, number false negatives: 0
+
+    # This score measures how well the neural network can detect the target from far away
+    true_pos3, false_pos3, false_neg3, iou3 = scoring_utils.score_run_iou(val_with_targ, pred_with_targ)
+
+number of validation samples intersection over the union evaulated on 322
+
+average intersection over union for background is 0.997071738369288
+
+average intersection over union for other people is 0.48694272888643103
+
+average intersection over union for the hero is 0.2420349581819363
+
+number true positives: 134, number false positives: 0, number false negatives: 178
+
+    # Sum all the true positives, etc from the three datasets to get a weight for the score
+    true_pos = true_pos1 + true_pos2 + true_pos3
+    false_pos = false_pos1 + false_pos2 + false_pos3
+    false_neg = false_neg1 + false_neg2 + false_neg3
+
+    weight = true_pos/(true_pos+false_neg+false_pos)
+    print('weight =' , weight)
+
+weight = 0.763039
+
+    # The IoU for the dataset that never includes the hero is excluded from grading
+    final_IoU = (iou1 + iou3)/2
+    print('final_IoU =  ', final_IoU)
+
+final_IoU =   0.5915457282723926
+
+    # And the final grade score is 
+    final_score = final_IoU * weight
+    print('final_score = ',final_score)
+
+final_score =  0.45137219402190504
+
+# Experimentation and testing
+1. For final score is great .40, the loss value should be lower than 0.01
+2. It is not always true that lower loss value related higher final score
+3. Add more train data can improve the final score
+4. Using learning rate 0.001 to start training after several steps if loss is not lower or final score is not higher, exit current epoch loop, go into lower learning rate 0.0005, then 0.0002.
+5. Save model to a file when higher final score is reached every time.
+6. The best learning rate is 0.0005 for this training model
+
+# Data set in testing
+Use three data sets in the training
+1. Original data from project
+2. Record more data from Simulator
+3. Use utility code to filter and flip the current file to generate more data
+
+# Future Enhancements
+1. Use different Optimizer
+2. Record more data samples and use data augmentation to create a larger dataset
+3. Use GAN as training model
+4. Use database to store hyperparameters and testing results to help finding best results
+
+
+
