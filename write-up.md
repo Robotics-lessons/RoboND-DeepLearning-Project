@@ -143,7 +143,12 @@ Share your scores in slack, and keep a tally in a pinned message. Scores should 
 
 
 ## Model Architecture ##
-Using fully convolutional network (FCN) to build this model architecture. It uses 6 encoder_block layers and the 1x1 convolution layer, plus 6 decoder_block layers.
+Using fully convolutional network (FCN) to build this model architecture. 
+
+1. 6 encoder_block for encoder layers 
+2. the 1x1 convolution layer
+3. 6 decoder_block for decoder layers.
+4. 4 skip connections between the encoder and decoder layers.
 
 [image_1]: ./docs/misc/FCNArchitecture.png 
 ![alt text][image_1]
@@ -227,11 +232,10 @@ There are three steps to build a FCN architecture:
    2. Add a 1x1 Convolution layer using the conv2d_batchnorm() function. Remember that 1x1 Convolutions require a kernel and stride of 1.
    3. Add decoder blocks for the decoder layers.
    
-
     def fcn_model(inputs, num_classes, filters=32):
     print('inputs : ',inputs)     
-    # TODO Add Encoder Blocks. 
-    # Remember that with each encoder layer, the depth of your model (the number of filters) increases.
+    #TODO Add Encoder Blocks. 
+    #Remember that with each encoder layer, the depth of your model (the number of filters) increases.
     input_layer1 = encoder_block(inputs, filters, 2)
     input_layer2 = encoder_block(input_layer1, filters*2, 2)  
     input_layer3 = encoder_block(input_layer2, filters*4, 2) 
@@ -266,7 +270,7 @@ There are three steps to build a FCN architecture:
     
     # The function returns the output layer of your model. "x" is the final layer obtained from the last decoder_block()
     return layers.Conv2D(num_classes, 1, activation='softmax', padding='same')(output_layer1)
-
+```
 
 ## Training
 
@@ -446,6 +450,15 @@ final_IoU =   0.5915457282723926
 
 final_score =  0.45137219402190504
 
+# Experimentation found
+1. For final score is great .40, the loss value should be lower than 0.01
+2. It is not always true that lower loss value related higher final score
+3. Add more train data can improve the final score
+4. 
+# Future Enhancements
+1. Try different Optimizer
+2. Try to record more data samples
+3. Try to change the training model
 
 
 
