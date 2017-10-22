@@ -233,44 +233,44 @@ There are three steps to build a FCN architecture:
    3. Add decoder blocks for the decoder layers.
    
     def fcn_model(inputs, num_classes, filters=32):
-    print('inputs : ',inputs)     
-    #TODO Add Encoder Blocks. 
-    #Remember that with each encoder layer, the depth of your model (the number of filters) increases.
-    input_layer1 = encoder_block(inputs, filters, 2)
-    input_layer2 = encoder_block(input_layer1, filters*2, 2)  
-    input_layer3 = encoder_block(input_layer2, filters*4, 2) 
-    input_layer4 = encoder_block(input_layer3, filters*8, 2) 
-    input_layer5 = encoder_block(input_layer4, filters*16, 2) 
-    input_layer6 = encoder_block(input_layer5, filters*32, 2) 
+        print('inputs : ',inputs)     
+        # TODO Add Encoder Blocks. 
+        # Remember that with each encoder layer, the depth of your model (the number of filters) increases.
+        input_layer1 = encoder_block(inputs, filters, 2)
+        input_layer2 = encoder_block(input_layer1, filters*2, 2)  
+        input_layer3 = encoder_block(input_layer2, filters*4, 2) 
+        input_layer4 = encoder_block(input_layer3, filters*8, 2) 
+        input_layer5 = encoder_block(input_layer4, filters*16, 2) 
+        input_layer6 = encoder_block(input_layer5, filters*32, 2) 
 
-    print('input_layer 1 :',input_layer1)
-    print('input_layer 2 :',input_layer2)
-    print('input_layer 3 :',input_layer3)
-    print('input_layer 4 :',input_layer4) 
-    print('input_layer 5 :',input_layer5)
-    print('input_layer 6 :',input_layer6)
+        print('input_layer 1 :',input_layer1)
+        print('input_layer 2 :',input_layer2)
+        print('input_layer 3 :',input_layer3)
+        print('input_layer 4 :',input_layer4) 
+        print('input_layer 5 :',input_layer5)
+        print('input_layer 6 :',input_layer6)
     
-    # TODO Add 1x1 Convolution layer using conv2d_batchnorm().
-    small_ip_layer = conv2d_batchnorm(input_layer6, filters*64, kernel_size=1, strides=1)
-    print('small_ip_layer :',small_ip_layer) 
+        # TODO Add 1x1 Convolution layer using conv2d_batchnorm().
+        small_ip_layer = conv2d_batchnorm(input_layer6, filters*64, kernel_size=1, strides=1)
+        print('small_ip_layer :',small_ip_layer) 
     
-    # TODO: Add the same number of Decoder Blocks as the number of Encoder Blocks
-    output_layer6 = decoder_block(small_ip_layer, input_layer5, filters*32) 
-    print('output_layer 6: ', output_layer6) 
-    output_layer5 = decoder_block(output_layer6, input_layer4, filters*16) 
-    print('output_layer 5: ', output_layer5) 
-    output_layer4 = decoder_block(output_layer5, input_layer3, filters*8)  
-    print('output_layer 4: ', output_layer4) 
-    output_layer3 = decoder_block(output_layer4, input_layer2, filters*4)  
-    print('output_layer 3: ', output_layer3) 
-    output_layer2 = decoder_block(output_layer3, input_layer1, filters*2) 
-    print('output_layer 2: ', output_layer2) 
-    output_layer1 = decoder_block(output_layer2, None, 3) 
-    print('output_layer 1: ', output_layer1) 
+        # TODO: Add the same number of Decoder Blocks as the number of Encoder Blocks
+        output_layer6 = decoder_block(small_ip_layer, input_layer5, filters*32) 
+        print('output_layer 6: ', output_layer6) 
+        output_layer5 = decoder_block(output_layer6, input_layer4, filters*16) 
+        print('output_layer 5: ', output_layer5) 
+        output_layer4 = decoder_block(output_layer5, input_layer3, filters*8)  
+        print('output_layer 4: ', output_layer4) 
+        output_layer3 = decoder_block(output_layer4, input_layer2, filters*4)  
+        print('output_layer 3: ', output_layer3) 
+        output_layer2 = decoder_block(output_layer3, input_layer1, filters*2) 
+        print('output_layer 2: ', output_layer2) 
+        output_layer1 = decoder_block(output_layer2, None, 3) 
+        print('output_layer 1: ', output_layer1) 
     
-    # The function returns the output layer of your model. "x" is the final layer obtained from the last decoder_block()
-    return layers.Conv2D(num_classes, 1, activation='softmax', padding='same')(output_layer1)
-```
+        # The function returns the output layer of your model. "x" is the final layer obtained from the last decoder_block()
+        return layers.Conv2D(num_classes, 1, activation='softmax', padding='same')(output_layer1)
+
 
 ## Training
 
