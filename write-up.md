@@ -145,10 +145,12 @@ Share your scores in slack, and keep a tally in a pinned message. Scores should 
 ## Model Architecture ##
 Using fully convolutional network (FCN) to build this model architecture. 
 
-1. 6 encoder_block for encoder layers 
-2. the 1x1 convolution layer
-3. 6 decoder_block for decoder layers.
-4. 4 skip connections between the encoder and decoder layers.
+1. 6 encoder_block for encoder layers, the encoder portion is a convolution network that reduces to a deeper 1x1 convolution layer
+2. the 1x1 convolution layer, it helps in reducing the dimensionality of the layer
+3. 6 decoder_block for decoder layers, the decode porttion is upsampling layers to higher dimensions or resolutions.
+4. 4 skip connections between the encoder and decoder layers. Skip connections which are a great way to retain some of the finer details from the previous layers as model decode or upsample the layers to the original size
+5. More encoder and decoder layers will help to detect far distance small objects, but it can take more time to train.
+6. This model architecture can be used for other object recognizition, but the dataset needs to create for these new objects like cat, dog, car etc. 
 
 [image_1]: ./docs/misc/FCNArchitecture.png 
 ![alt text][image_1]
