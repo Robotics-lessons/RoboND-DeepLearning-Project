@@ -48,11 +48,11 @@ If for some reason you choose not to use Anaconda, you must install the followin
 * PyQt4/Pyqt5
 
 ## Implement the Segmentation Network
-1. Download the training dataset from above and extract to the project `data` directory.
-2. Implement your solution in model_training.ipynb
-3. Train the network locally, or on [AWS](https://classroom.udacity.com/nanodegrees/nd209/parts/09664d24-bdec-4e64-897a-d0f55e177f09/modules/cac27683-d5f4-40b4-82ce-d708de8f5373/lessons/197a058e-44f6-47df-8229-0ce633e0a2d0/concepts/27c73209-5d7b-4284-8315-c0e07a7cd87f?contentVersion=1.0.0&contentLocale=en-us).
-4. Continue to experiment with the training data and network until you attain the score you desire.
-5. Once you are comfortable with performance on the training dataset, see how it performs in live simulation!
+ 1. Download the training dataset from above and extract to the project `data` directory.
+ 2. Implement your solution in model_training.ipynb
+ 3. Train the network locally, or on [AWS](https://classroom.udacity.com/nanodegrees/nd209/parts/09664d24-bdec-4e64-897a-d0f55e177f09/modules/cac27683-d5f4-40b4-82ce-d708de8f5373/lessons/197a058e-44f6-47df-8229-0ce633e0a2d0/concepts/27c73209-5d7b-4284-8315-c0e07a7cd87f?contentVersion=1.0.0&contentLocale=en-us).
+ 4. Continue to experiment with the training data and network until you attain the score you desire.
+ 5. Once you are comfortable with performance on the training dataset, see how it performs in live simulation!
 
 ## Collecting Training Data ##
 A simple training dataset has been provided in this project's repository. This dataset will allow you to verify that your segmentation network is semi-functional. However, if your interested in improving your score,you may want to collect additional training data. To do it, please see the following steps.
@@ -71,15 +71,15 @@ data/raw_sim_data/validation/run1
 ```
 
 ### Training Set ###
-1. Run QuadSim
-2. Click the `DL Training` button
-3. Set patrol points, path points, and spawn points. **TODO** add link to data collection doc
-3. With the simulator running, press "r" to begin recording.
-4. In the file selection menu navigate to the `data/raw_sim_data/train/run1` directory
-5. **optional** to speed up data collection, press "9" (1-9 will slow down collection speed)
-6. When you have finished collecting data, hit "r" to stop recording.
-7. To reset the simulator, hit "`<esc>`"
-8. To collect multiple runs create directories `data/raw_sim_data/train/run2`, `data/raw_sim_data/train/run3` and repeat the above steps.
+ 1. Run QuadSim
+ 2. Click the `DL Training` button
+ 3. Set patrol points, path points, and spawn points. 
+ 4. With the simulator running, press "r" to begin recording.
+ 5. In the file selection menu navigate to the `data/raw_sim_data/train/run1` directory
+ 6. **optional** to speed up data collection, press "9" (1-9 will slow down collection speed)
+ 7. When you have finished collecting data, hit "r" to stop recording.
+ 8. To reset the simulator, hit "`<esc>`"
+ 9. To collect multiple runs create directories `data/raw_sim_data/train/run2`, `data/raw_sim_data/train/run3` and repeat the above steps.
 
 
 ### Validation Set ###
@@ -159,18 +159,18 @@ The Encoder for FCN will essentially require separable convolution layers. The 1
 
 
     def separable_conv2d_batchnorm(input_layer, filters, strides=1):
-    output_layer = SeparableConv2DKeras(filters=filters,kernel_size=3, strides=strides,
+        output_layer = SeparableConv2DKeras(filters=filters,kernel_size=3, strides=strides,
                              padding='same', activation='relu')(input_layer)
     
-    output_layer = layers.BatchNormalization()(output_layer) 
-    return output_layer
+        output_layer = layers.BatchNormalization()(output_layer) 
+        return output_layer
 
     def conv2d_batchnorm(input_layer, filters, kernel_size=3, strides=1):
-    output_layer = layers.Conv2D(filters=filters, kernel_size=kernel_size, strides=strides, 
+        output_layer = layers.Conv2D(filters=filters, kernel_size=kernel_size, strides=strides, 
                       padding='same', activation='relu')(input_layer)
     
-    output_layer = layers.BatchNormalization()(output_layer) 
-    return output_layer
+        output_layer = layers.BatchNormalization()(output_layer) 
+        return output_layer
 
 
 ### Bilinear Upsampling
@@ -179,7 +179,7 @@ The following helper function implements the bilinear upsampling layer. Upsampli
  
     def bilinear_upsample(input_layer):
         output_layer = BilinearUpSampling2D((2,2))(input_layer)
-    return output_layer
+        return output_layer
 
 
 ## Build the Model
@@ -194,8 +194,8 @@ Create an encoder block that includes a separable convolution layer using the se
     def encoder_block(input_layer, filters, strides):
     
     # TODO Create a separable convolution layer using the separable_conv2d_batchnorm() function.
-    output_layer = separable_conv2d_batchnorm(input_layer, filters, strides=strides)    
-    return output_layer
+        output_layer = separable_conv2d_batchnorm(input_layer, filters, strides=strides)    
+        return output_layer
 
 
 ### Decoder Block
@@ -209,19 +209,19 @@ The decoder block is comprised of three parts:
 
     def decoder_block(small_ip_layer, large_ip_layer, filters):
     
-    # TODO Upsample the small input layer using the bilinear_upsample() function.
-    upsampled_layer = bilinear_upsample(small_ip_layer)
+        # TODO Upsample the small input layer using the bilinear_upsample() function.
+        upsampled_layer = bilinear_upsample(small_ip_layer)
 
-    # TODO Concatenate the upsampled and large input layers using layers.concatenate
-    if large_ip_layer != None:
-        concatenate_layer = layers.concatenate([upsampled_layer, large_ip_layer])
-    else:
-        concatenate_layer = upsampled_layer
+        # TODO Concatenate the upsampled and large input layers using layers.concatenate
+        if large_ip_layer != None:
+            concatenate_layer = layers.concatenate([upsampled_layer, large_ip_layer])
+        else:
+            concatenate_layer = upsampled_layer
    
-    # TODO Add some number of separable convolution layers
-    output_layer = separable_conv2d_batchnorm(concatenate_layer, filters)
+        # TODO Add some number of separable convolution layers
+        output_layer = separable_conv2d_batchnorm(concatenate_layer, filters)
  
-    return output_layer
+        return output_layer
 
 
 ### Model Function
