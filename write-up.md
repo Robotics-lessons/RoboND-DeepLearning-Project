@@ -306,20 +306,14 @@ output_layer 1:  Tensor("batch_normalization_123/batchnorm/add_1:0", shape=(?, 2
 ### Hyperparameters
 
 Define and tune the hyperparameters.
- ### learning_rate: ###
-     learning_rate is set as 0.001, then try 0.0005 and 0.0002 after loss value or final score no improve for several steps.
- ### batch_size: ### 
-     number of training samples/images that get propagated through the network in a single pass.
- ### num_epochs: ### 
-     number of times the entire training dataset gets propagated through the network.
- ### steps_per_epoch: ### 
-     number of batches of training images that go through the network in 1 epoch. 
+ * learning_rate: * learning_rate is set as 0.001, then try 0.0005 and 0.0002 after loss value or final score no improve for several steps.
+ * batch_size: * number of training samples/images that get propagated through the network in a single pass.
+ * num_epochs: * number of times the entire training dataset gets propagated through the network.
+ * steps_per_epoch: * number of batches of training images that go through the network in 1 epoch. 
      One recommended value to try would be based on the total number of images in training dataset divided by the batch_size.
- ### validation_steps: ### 
-     number of batches of validation images that go through the network in 1 epoch. 
+ * validation_steps: * number of batches of validation images that go through the network in 1 epoch. 
      This is similar to steps_per_epoch, except validation_steps is for the validation dataset.     
- ### workers: ### 
-     maximum number of processes to spin up. This can affect the training speed and is dependent on the hardware.
+ * workers: * maximum number of processes to spin up. This can affect the training speed and is dependent on the hardware.
 
     learning_rate = 0.001
     batch_size = 32
@@ -425,6 +419,8 @@ Evaluate the model! The following cells include several different scores to help
  3. average intersection over union for other people is 0.48694272888643103
  4. average intersection over union for the hero is 0.2420349581819363
  5. number true positives: 134, number false positives: 0, number false negatives: 178
+
+-------------------------------------------------------------------------------------------------
 
     # Sum all the true positives, etc from the three datasets to get a weight for the score
     true_pos = true_pos1 + true_pos2 + true_pos3
