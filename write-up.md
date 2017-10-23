@@ -268,7 +268,7 @@ There are three steps to build a FCN architecture:
         output_layer1 = decoder_block(output_layer2, None, 3) 
         print('output_layer 1: ', output_layer1) 
     
-        # The function returns the output layer of your model. "x" is the final layer obtained from the last decoder_block()
+        # The function returns the output layer of your model. "output_layer 1" is the final layer obtained from the last decoder_block()
         return layers.Conv2D(num_classes, 1, activation='softmax', padding='same')(output_layer1)
 
 
@@ -306,7 +306,8 @@ output_layer 1:  Tensor("batch_normalization_123/batchnorm/add_1:0", shape=(?, 2
 ### Hyperparameters
 
 Define and tune the hyperparameters.
-
+ ### learning_rate: ###
+ learning_rate is set as 0.001, then try 0.0005 and 0.0002 after loss value or final score no improve for several steps.
  ### batch_size: ### 
  number of training samples/images that get propagated through the network in a single pass.
  ### num_epochs: ### 
@@ -397,45 +398,33 @@ The following cell will write predictions to files and return paths to the appro
 # Result evaluation
 Evaluate the model! The following cells include several different scores to help evaluating the model under the different conditions discussed during the Prediction step.
 
-    # Scores for while the quad is following behind the target. 
+## Scores for while the quad is following behind the target. 
     true_pos1, false_pos1, false_neg1, iou1 = scoring_utils.score_run_iou(val_following, pred_following)
 
-number of validation samples intersection over the union evaulated on 542
-
-average intersection over union for background is 0.9966299392160006
-
-average intersection over union for other people is 0.4262138032784614
-
-average intersection over union for the hero is 0.941056498362849
-
-number true positives: 539, number false positives: 0, number false negatives: 0
+ number of validation samples intersection over the union evaulated on 542
+ average intersection over union for background is 0.9966299392160006
+ average intersection over union for other people is 0.4262138032784614
+ average intersection over union for the hero is 0.941056498362849
+ number true positives: 539, number false positives: 0, number false negatives: 0
 
 
-    # Scores for images while the quad is on patrol and the target is not visable
+## Scores for images while the quad is on patrol and the target is not visable
     true_pos2, false_pos2, false_neg2, iou2 = scoring_utils.score_run_iou(val_no_targ, pred_no_targ)
 
-number of validation samples intersection over the union evaulated on 270
+ number of validation samples intersection over the union evaulated on 270
+ average intersection over union for background is 0.990500069409552
+ average intersection over union for other people is 0.8154973057626096
+ average intersection over union for the hero is 0.0
+ number true positives: 0, number false positives: 31, number false negatives: 0
 
-average intersection over union for background is 0.990500069409552
-
-average intersection over union for other people is 0.8154973057626096
-
-average intersection over union for the hero is 0.0
-
-number true positives: 0, number false positives: 31, number false negatives: 0
-
-    # This score measures how well the neural network can detect the target from far away
+## This score measures how well the neural network can detect the target from far away
     true_pos3, false_pos3, false_neg3, iou3 = scoring_utils.score_run_iou(val_with_targ, pred_with_targ)
 
-number of validation samples intersection over the union evaulated on 322
-
-average intersection over union for background is 0.997071738369288
-
-average intersection over union for other people is 0.48694272888643103
-
-average intersection over union for the hero is 0.2420349581819363
-
-number true positives: 134, number false positives: 0, number false negatives: 178
+ number of validation samples intersection over the union evaulated on 322
+ average intersection over union for background is 0.997071738369288
+ average intersection over union for other people is 0.48694272888643103
+ average intersection over union for the hero is 0.2420349581819363
+ number true positives: 134, number false positives: 0, number false negatives: 178
 
     # Sum all the true positives, etc from the three datasets to get a weight for the score
     true_pos = true_pos1 + true_pos2 + true_pos3
