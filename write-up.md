@@ -464,25 +464,25 @@ final_score =  0.45137219402190504
 # Data set in testing
 Use three data sets in the training
 ### 1. Original data from project
-found 2701 files in ../data/original/train/masks/
-no hero (pixel <= 3), file number = 2067
-hero very far (pixel > 3 and <= 65), file number = 47 
-hero not too close (pixel > 65 and <= 655), file number = 188
-hero close (pixel > 655), file number = 399
+    found 2701 files in ../data/original/train/masks/
+    no hero (pixel <= 3), file number = 2067
+    hero very far (pixel > 3 and <= 65), file number = 47 
+    hero not too close (pixel > 65 and <= 655), file number = 188
+    hero close (pixel > 655), file number = 399
 
 ### 2. Record more data from Simulator
-found 6249 files in ../data/train/masks/
-no hero (pixel <= 3), file number = 4569
-hero very far (pixel > 3 and <= 65), file number = 979 
-hero not too close (pixel > 65 and <= 655), file number = 299
-hero close (pixel > 655), file number = 402
+    found 6249 files in ../data/train/masks/
+    no hero (pixel <= 3), file number = 4569
+    hero very far (pixel > 3 and <= 65), file number = 979 
+    hero not too close (pixel > 65 and <= 655), file number = 299
+    hero close (pixel > 655), file number = 402
 
 ### 3. Use utility code to filter and flip the current files to generate more data
-found 7555 files in ../data/test1/train/masks/
-no hero (pixel <= 3), file number = 4590
-hero very far (pixel > 3 and <= 65), file number = 1958 
-hero not too close (pixel > 65 and <= 655), file number = 598
-hero close (pixel > 655), file number = 409
+    found 7555 files in ../data/test1/train/masks/
+    no hero (pixel <= 3), file number = 4590
+    hero very far (pixel > 3 and <= 65), file number = 1958 
+    hero not too close (pixel > 65 and <= 655), file number = 598
+    hero close (pixel > 655), file number = 409
 
 
 # Future Enhancements
