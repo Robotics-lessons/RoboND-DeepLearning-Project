@@ -358,6 +358,9 @@ Define and tune the hyperparameters.
     t2 = time.time()
     print("Time: %0.2fs" % (t2 - t1))
 
+[image_3]: ./docs/misc/training_curves.png 
+![alt text][image_3] 
+
 ## Run training code
 The python training code can be found in ./code/my_model_training.py
 
@@ -385,7 +388,7 @@ The following cell will write predictions to files and return paths to the appro
     val_following, pred_following = model_tools.write_predictions_grade_set(model,
                                         run_num,'following_images', 'sample_evaluation_data')
 
-# Evaluation results
+# Result evaluation
 Evaluate the model! The following cells include several different scores to help evaluating the model under the different conditions discussed during the Prediction step.
 
     # Scores for while the quad is following behind the target. 
@@ -451,18 +454,37 @@ final_IoU =   0.5915457282723926
 final_score =  0.45137219402190504
 
 # Experimentation and testing
-1. For final score is great .40, the loss value should be lower than 0.01
-2. It is not always true that lower loss value related higher final score
-3. Add more train data can improve the final score
-4. Using learning rate 0.001 to start training after several steps if loss is not lower or final score is not higher, exit current epoch loop, go into lower learning rate 0.0005, then 0.0002.
-5. Save model to a file when higher final score is reached every time.
-6. The best learning rate is 0.0005 for this training model
+1. The loss value should be lower than 0.01, the code starts to call prediction function
+2. For final score is great .40, the code starts to call evaluation function
+3. It is not always true that lower loss value related higher final score
+4. Add more train data can improve the final score
+5. Using learning rate 0.001 to start training after several steps if loss is not lower or final score is not higher, exit current epoch loop, go into lower learning rate 0.0005, then 0.0002.
+6. Save model to a file when higher final score is reached every time.
+7. The best learning rate is 0.0005 for this training model
 
 # Data set in testing
 Use three data sets in the training
-1. Original data from project
-2. Record more data from Simulator
-3. Use utility code to filter and flip the current file to generate more data
+### 1. Original data from project
+    found 2701 files in ../data/original/train/masks/
+    no hero (pixel <= 3), file number = 2067
+    hero very far (pixel > 3 and <= 65), file number = 47 
+    hero not too close (pixel > 65 and <= 655), file number = 188
+    hero close (pixel > 655), file number = 399
+
+### 2. Record more data from Simulator
+    found 6249 files in ../data/train/masks/
+    no hero (pixel <= 3), file number = 4569
+    hero very far (pixel > 3 and <= 65), file number = 979 
+    hero not too close (pixel > 65 and <= 655), file number = 299
+    hero close (pixel > 655), file number = 402
+
+### 3. Use utility code to filter and flip the current files to generate more data
+    found 7555 files in ../data/test1/train/masks/
+    no hero (pixel <= 3), file number = 4590
+    hero very far (pixel > 3 and <= 65), file number = 1958 
+    hero not too close (pixel > 65 and <= 655), file number = 598
+    hero close (pixel > 655), file number = 409
+
 
 # Future Enhancements
 1. Use different Optimizer
