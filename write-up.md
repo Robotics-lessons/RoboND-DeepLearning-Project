@@ -465,7 +465,7 @@ final_score =  0.45137219402190504
 4. Add more train data can improve the final score
 5. Using learning rate 0.001 to start training after several steps if loss is not lower or final score is not higher, exit current epoch loop, go into lower learning rate 0.0005, then 0.0002.
 6. Save model to a file when higher final score is reached every time.
-7. The best learning rate is 0.0005 for this training model
+7. The learning rate for best final score is 0.001 for this training model
 
 # Data set in testing
 Use three data sets in the training
